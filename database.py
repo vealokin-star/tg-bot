@@ -115,3 +115,61 @@ class Database:
                 WHERE user_id = ?
             """, (user_id,)).fetchone()
             return dict(row) if row else {"total": 0, "success": 0, "failed": 0}
+
+    def get_admin_stats(self) -> dict:
+        """Full stats for admin."""
+        today = datetime.now().strftime("%Y-%m-%d")
+        with self.get_connection() as conn:
+            total_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+
+            active_today = conn.execute(
+                "SELECT COUNT(DISTINCT user_id) FROM requests WHERE created_at LIKE ?",
+                (f"{today}%",)
+            ).fetchone()[0]
+
+            new_today = conn.execute(
+                "SELECT COUNT(*) FROM users WHERE first_seen LIKE ?",
+                (f"{today}%",)
+            ).fetchone()[0]
+
+            total_downloads = conn.execute(
+                "SELECT COUNT(*) FROM requests WHERE status = 'success'"
+            ).fetchone()[0]
+
+            total_requests = conn.execute(
+                "SELECT COUNT(*) FROM requests"
+            ).fetchone()[0]
+
+            tiktok_count = conn.execute(
+                "SELECT COUNT(*) FROM requests WHERE platform = 'tiktok' AND status = 'success'"
+            ).fetchone()[0]
+
+            instagram_count = conn.execute(
+                "SELECT COUNT(*) FROM requests WHERE platform = 'instagram' AND status = 'success'"
+            ).fetchone()[0]
+
+            lang_ru = conn.execute(
+                "SELECT COUNT(*) FROM users WHERE language = 'ru'"
+            ).fetchone()[0]
+
+            lang_en = conn.execute(
+                "SELECT COUNT(*) FROM users WHERE language = 'en'"
+            ).fetchone()[0]
+
+            downloads_today = conn.execute(
+                "SELECT COUNT(*) FROM requests WHERE status = 'success' AND created_at LIKE ?",
+                (f"{today}%",)
+            ).fetchone()[0]
+
+        return {
+            "total_users": total_users,
+            "new_today": new_today,
+            "active_today": active_today,
+            "total_downloads": total_downloads,
+            "downloads_today": downloads_today,
+            "total_requests": total_requests,
+            "tiktok": tiktok_count,
+            "instagram": instagram_count,
+            "lang_ru": lang_ru,
+            "lang_en": lang_en,
+        }

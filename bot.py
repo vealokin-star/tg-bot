@@ -17,6 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "YOUR_BOT_TOKEN_HERE")
+ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))  # твой Telegram user_id
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -168,6 +169,34 @@ async def handle_text(message: Message):
         db.update_request_status(request_id, "failed", str(e))
         await status_msg.edit_text(t(lang, "error"))
 
+
+
+@dp.message(Command("admin"))
+async def cmd_admin(message: Message):
+    if message.from_user.id != ADMIN_ID:
+        await message.answer("⛔ Нет доступа.")
+        return
+
+    s = db.get_admin_stats()
+    success_rate = round(s["total_downloads"] / s["total_requests"] * 100) if s["total_requests"] > 0 else 0
+
+    text = (
+        "📊 *Статистика бота*\n\n"
+        f"👥 *Пользователи*\n"
+        f"├ Всего: {s['total_users']}\n"
+        f"├ Новых сегодня: {s['new_today']}\n"
+        f"└ Активных сегодня: {s['active_today']}\n\n"
+        f"📥 *Скачивания*\n"
+        f"├ Всего успешных: {s['total_downloads']}\n"
+        f"├ Сегодня: {s['downloads_today']}\n"
+        f"├ TikTok: {s['tiktok']}\n"
+        f"├ Instagram Reels: {s['instagram']}\n"
+        f"└ Успешность: {success_rate}%\n\n"
+        f"🌍 *Языки*\n"
+        f"├ 🇷🇺 Русский: {s['lang_ru']}\n"
+        f"└ 🇬🇧 English: {s['lang_en']}\n"
+    )
+    await message.answer(text, parse_mode="Markdown")
 
 # ── Entry point ────────────────────────────────────────────────────────────────
 
