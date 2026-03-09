@@ -6,9 +6,7 @@ TEXTS = {
             "👋 Привет! Я бот для скачивания видео из TikTok и Instagram.\n\n"
             "📎 Отправь мне ссылку на:\n"
             "• TikTok видео\n"
-            "• Instagram Reels\n"
-            "• Instagram пост (фото/видео)\n"
-            "• Instagram Stories\n\n"
+            "• Instagram Reels\n\n"
             "И я скачаю его для тебя! 🚀"
         ),
         "send_link": "🔗 Отправь ссылку на видео:",
@@ -26,7 +24,7 @@ TEXTS = {
             "❓ Не могу распознать ссылку.\n\n"
             "Поддерживаются ссылки с:\n"
             "• tiktok.com\n"
-            "• instagram.com"
+            "• instagram.com/reel/"
         ),
         "history_empty": "📭 У тебя пока нет истории запросов.",
         "history_title": "📋 *Последние 10 запросов:*\n\n",
@@ -45,9 +43,7 @@ TEXTS = {
             "👋 Hello! I'm a bot for downloading videos from TikTok and Instagram.\n\n"
             "📎 Send me a link to:\n"
             "• TikTok video\n"
-            "• Instagram Reels\n"
-            "• Instagram post (photo/video)\n"
-            "• Instagram Stories\n\n"
+            "• Instagram Reels\n\n"
             "And I'll download it for you! 🚀"
         ),
         "send_link": "🔗 Send me a video link:",
@@ -65,7 +61,7 @@ TEXTS = {
             "❓ Can't recognize the link.\n\n"
             "Supported links from:\n"
             "• tiktok.com\n"
-            "• instagram.com"
+            "• instagram.com/reel/"
         ),
         "history_empty": "📭 You have no request history yet.",
         "history_title": "📋 *Last 10 requests:*\n\n",
