@@ -50,9 +50,9 @@ class Downloader:
             url,
             "-o", output_template,
             "--no-playlist",
-            # Best video with original aspect ratio — no remux that breaks dimensions
-            "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
-            "--merge-output-format", "mp4",
+            # Download best quality mp4 that already has audio — no merging needed
+            # This preserves original aspect ratio without any re-encoding
+            "-f", "bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]/best",
             "--no-part",
         ])
 
@@ -60,15 +60,12 @@ class Downloader:
         video_files = [os.path.join(output_dir, f) for f in files if f.endswith(".mp4")]
         photo_files = [os.path.join(output_dir, f) for f in files if f.endswith((".jpg", ".jpeg", ".png", ".webp"))]
 
-        # TikTok photo slideshow
         if photo_files and not video_files:
             return {"type": "photo", "paths": photo_files}
 
-        # Mixed (some TikTok slideshows have both)
         if photo_files and video_files:
             return {"type": "photos_and_videos", "paths": photo_files + video_files}
 
-        # Regular video
         if video_files:
             return {"type": "video", "path": video_files[0], "paths": video_files}
 
@@ -85,8 +82,7 @@ class Downloader:
             url,
             "-o", output_template,
             "--no-playlist",
-            "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best",
-            "--merge-output-format", "mp4",
+            "-f", "bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]/best",
             "--no-part",
         ])
 
